@@ -18,7 +18,7 @@ from rich.text import Text
 
 from temporal_cloak.const import TemporalCloakConst
 from temporal_cloak.decoding import AutoDecoder
-from temporal_cloak.metrics import compute_char_bit_errors
+from temporal_cloak.metrics import compute_char_bit_errors, SignalComparator
 
 DEFAULT_URL = "https://temporalcloak.cloud/api/image"
 
@@ -1118,21 +1118,18 @@ def _timing_server_comparison(console, data):
     """Display server vs client bit comparison."""
     server_debug = data.get("server_debug", {})
     result = data.get("result", {})
-
-    signal_bits = server_debug.get("signal_bits", "")
-    bits_hex = result.get("bits_hex", "")
-    bit_count = result.get("bit_count", 0)
     scores = data.get("timing", {}).get("confidence_scores", [])
 
-    if not signal_bits or not bits_hex:
+    comparator = SignalComparator(
+        signal_bits=server_debug.get("signal_bits", ""),
+        received_hex=result.get("bits_hex", ""),
+        received_bit_count=result.get("bit_count", 0),
+    )
+    raw = comparator.raw
+    if not raw.expected_bits or not raw.observed_bits:
         return
 
-    # Convert client hex to binary
-    client_bits = bin(int(bits_hex, 16))[2:].zfill(len(bits_hex) * 4)
-    if bit_count and bit_count < len(client_bits):
-        client_bits = client_bits[:bit_count]
-
-    compare_len = min(len(signal_bits), len(client_bits))
+    mismatch_set = set(raw.mismatch_indices)
 
     table = Table(title="Server vs Client Comparison", border_style="dim")
     table.add_column("Index", justify="right", style="dim")
@@ -1141,24 +1138,22 @@ def _timing_server_comparison(console, data):
     table.add_column("Match", justify="center")
     table.add_column("Confidence", justify="right")
 
-    mismatches = 0
-    for i in range(compare_len):
-        expected = signal_bits[i]
-        observed = client_bits[i]
-        match = expected == observed
+    for i in range(raw.compare_len):
+        expected = raw.expected_bits[i]
+        observed = raw.observed_bits[i]
+        match = i not in mismatch_set
         conf = scores[i] if i < len(scores) else 0
 
         if match:
-            match_text = Text("✓", style="green")
+            match_text = Text("\u2713", style="green")
             observed_text = Text(observed)
         else:
-            match_text = Text("✗", style="bold red")
+            match_text = Text("\u2717", style="bold red")
             observed_text = Text(observed, style="bold red")
-            mismatches += 1
 
         conf_text = Text(f"{conf:.2f}", style="red" if conf < 0.2 else "yellow" if conf < 0.5 else "green")
 
         table.add_row(str(i), expected, observed_text, match_text, conf_text)
 
     console.print(table)
-    console.print(f"\n[dim]{compare_len} bits compared, {mismatches} mismatches[/dim]")
+    console.print(f"\n[dim]{raw.compare_len} bits compared, {raw.mismatch_count} mismatches[/dim]")

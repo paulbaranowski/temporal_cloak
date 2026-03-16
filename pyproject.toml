@@ -19,6 +19,7 @@ dependencies = [
 
 [project.scripts]
 temporal-cloak = "temporal_cloak.cli:cli"
+benchmark = "temporal_cloak.benchmark:cli"
 
 [dependency-groups]
 dev = [
