@@ -70,7 +70,7 @@ A `try/finally` block restores the original server config (fetched via `GET /api
 uv run python scripts/sweep_bit0_delay.py [OPTIONS]
 
 Options:
-  --base-url        Server URL (default: http://localhost:8888)
+  --base-url        Server URL (default: https://temporalcloak.cloud)
   --num-messages    Messages per delay point (default: 5)
   --levels          Subdivision depth (default: 3, giving 9 points)
   --min-delay       Lower bound (default: 0.1)

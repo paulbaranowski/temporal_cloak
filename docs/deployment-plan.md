@@ -28,8 +28,8 @@ All deployment settings read from environment variables with sensible defaults. 
 |---------|---------|------------|
 | `TC_HOST` | `0.0.0.0` | `0.0.0.0` |
 | `TC_PORT` | `8888` | `443` |
-| `TC_TLS_CERT` | _(empty)_ | `/etc/letsencrypt/live/yourdomain.com/fullchain.pem` |
-| `TC_TLS_KEY` | _(empty)_ | `/etc/letsencrypt/live/yourdomain.com/privkey.pem` |
+| `TC_TLS_CERT` | _(empty)_ | `/etc/letsencrypt/live/temporalcloak.cloud/fullchain.pem` |
+| `TC_TLS_KEY` | _(empty)_ | `/etc/letsencrypt/live/temporalcloak.cloud/privkey.pem` |
 | `TC_BIT_1_DELAY` | `0.00` | `0.05` |
 | `TC_BIT_0_DELAY` | `0.10` | `0.30` |
 | `TC_MIDPOINT` | `0.05` | `0.175` |
@@ -61,7 +61,7 @@ The `temporal-cloak` CLI replaces the old `temporal_cloak_cli_decoder.py` script
 uv run temporal-cloak decode http://localhost:8888/api/image
 
 # Production
-uv run temporal-cloak decode https://yourdomain.com/api/image
+uv run temporal-cloak decode https://temporalcloak.cloud/api/image
 ```
 
 ### 1.5 Quotes Encoding
@@ -168,9 +168,9 @@ uv sync
 
 ```bash
 # Get cert (standalone mode — certbot runs its own temp server on port 80)
-sudo certbot certonly --standalone -d yourdomain.com
+sudo certbot certonly --standalone -d temporalcloak.cloud
 
-# Certs land in /etc/letsencrypt/live/yourdomain.com/
+# Certs land in /etc/letsencrypt/live/temporalcloak.cloud/
 #   fullchain.pem  — certificate + intermediates
 #   privkey.pem    — private key
 ```
@@ -183,14 +183,14 @@ Let's Encrypt certs are owned by root. The `temporalcloak` user needs read acces
 # Allow traversal into the live/ and archive/ directories
 sudo chmod 750 /etc/letsencrypt/live/
 sudo chmod 750 /etc/letsencrypt/archive/
-sudo chmod 750 /etc/letsencrypt/live/yourdomain.com/
-sudo chmod 750 /etc/letsencrypt/archive/yourdomain.com/
+sudo chmod 750 /etc/letsencrypt/live/temporalcloak.cloud/
+sudo chmod 750 /etc/letsencrypt/archive/temporalcloak.cloud/
 
 # Grant group read on the private key (the most restrictive file)
-sudo chgrp temporalcloak /etc/letsencrypt/live/yourdomain.com/
-sudo chgrp temporalcloak /etc/letsencrypt/archive/yourdomain.com/
-sudo chgrp temporalcloak /etc/letsencrypt/archive/yourdomain.com/*
-sudo chmod 640 /etc/letsencrypt/archive/yourdomain.com/privkey*.pem
+sudo chgrp temporalcloak /etc/letsencrypt/live/temporalcloak.cloud/
+sudo chgrp temporalcloak /etc/letsencrypt/archive/temporalcloak.cloud/
+sudo chgrp temporalcloak /etc/letsencrypt/archive/temporalcloak.cloud/*
+sudo chmod 640 /etc/letsencrypt/archive/temporalcloak.cloud/privkey*.pem
 ```
 
 ### 4.3 Auto-Renewal
@@ -224,8 +224,8 @@ User=temporalcloak
 WorkingDirectory=/home/temporalcloak/app
 Environment=TC_HOST=0.0.0.0
 Environment=TC_PORT=443
-Environment=TC_TLS_CERT=/etc/letsencrypt/live/yourdomain.com/fullchain.pem
-Environment=TC_TLS_KEY=/etc/letsencrypt/live/yourdomain.com/privkey.pem
+Environment=TC_TLS_CERT=/etc/letsencrypt/live/temporalcloak.cloud/fullchain.pem
+Environment=TC_TLS_KEY=/etc/letsencrypt/live/temporalcloak.cloud/privkey.pem
 Environment=TC_BIT_1_DELAY=0.05
 Environment=TC_BIT_0_DELAY=0.30
 Environment=TC_MIDPOINT=0.175
@@ -267,7 +267,7 @@ uv run temporal-cloak decode http://localhost:8888/api/image
 After deploying to the VPS, run the client from your local machine:
 
 ```bash
-uv run temporal-cloak decode https://yourdomain.com/api/image
+uv run temporal-cloak decode https://temporalcloak.cloud/api/image
 ```
 
 Check:

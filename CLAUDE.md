@@ -93,6 +93,7 @@ The encoding/decoding roles are swapped between demos: in Demo 1 the client enco
 
 ### Deployment
 
+- **Production URL:** https://temporalcloak.cloud
 - **Hosted on:** Hostinger VPS (Ubuntu), runs as systemd service `temporalcloak`
 - **Auto-deploy:** `.github/workflows/deploy.yml` — pushes to `main` trigger SSH deploy (git pull + uv sync + restart)
 - **TLS:** Tornado handles TLS directly (no nginx) — critical because reverse proxies buffer chunks and destroy timing

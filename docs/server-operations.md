@@ -63,7 +63,7 @@ Key fields to look at:
 curl -k https://localhost/api/health
 
 # From your local machine
-curl https://yourdomain.com/api/health
+curl https://temporalcloak.cloud/api/health
 ```
 
 Returns `{"status": "ok", "uptime": <seconds>}`.

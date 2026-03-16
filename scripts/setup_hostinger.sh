@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Full server setup for TemporalCloak on a fresh Hostinger VPS (Ubuntu 24.04).
-# Run as root: sudo bash scripts/setup_hostinger.sh yourdomain.com
+# Run as root: sudo bash scripts/setup_hostinger.sh temporalcloak.cloud
 #
 # Prerequisites:
 #   - Fresh Ubuntu 24.04 VPS
@@ -27,7 +27,7 @@ SERVICE_FILE="/etc/systemd/system/temporalcloak.service"
 
 if [ -z "$DOMAIN" ]; then
     echo "Usage: sudo bash $0 <domain>"
-    echo "Example: sudo bash $0 temporalcloak.example.com"
+    echo "Example: sudo bash $0 temporalcloak.cloud"
     exit 1
 fi
 
